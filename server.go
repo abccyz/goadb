@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/abccyz/goadb/internal/errors"
 	"github.com/abccyz/goadb/wire"
@@ -139,6 +141,17 @@ var localFilesystem = &filesystem{
 		return isExecutable(path)
 	},
 	CmdCombinedOutput: func(name string, arg ...string) ([]byte, error) {
-		return exec.Command(name, arg...).CombinedOutput()
+		cmd := exec.Command(name, arg...)
+		switch runtime.GOOS {
+		case "windows":
+			// 设置执行命令时隐藏控制台窗口
+			cmd.SysProcAttr = &syscall.SysProcAttr{
+				HideWindow: true,
+			}
+			return cmd.CombinedOutput()
+		default:
+			return cmd.CombinedOutput()
+		}
+
 	},
 }
