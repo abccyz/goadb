@@ -142,11 +142,13 @@ var localFilesystem = &filesystem{
 	},
 	CmdCombinedOutput: func(name string, arg ...string) ([]byte, error) {
 		cmd := exec.Command(name, arg...)
+		log := fmt.Sprintf("系统: %s", runtime.GOOS)
+		fmt.Println(log)
 		switch runtime.GOOS {
 		case "windows":
 			// 设置执行命令时隐藏控制台窗口
 			cmd.SysProcAttr = &syscall.SysProcAttr{
-				//HideWindow: true,
+				HideWindow: true,
 			}
 			return cmd.CombinedOutput()
 		default:
