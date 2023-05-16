@@ -142,7 +142,6 @@ var localFilesystem = &filesystem{
 	},
 	CmdCombinedOutput: func(name string, arg ...string) ([]byte, error) {
 		cmd := exec.Command(name, arg...)
-		fmt.Println("系统: ", runtime.GOOS)
 		switch runtime.GOOS {
 		case "windows":
 			// 设置执行命令时隐藏控制台窗口
