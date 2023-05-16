@@ -3,14 +3,11 @@ package adb
 import (
 	stderrors "errors"
 	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
-	"syscall"
-
 	"github.com/abccyz/goadb/internal/errors"
 	"github.com/abccyz/goadb/wire"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 const (
@@ -142,18 +139,6 @@ var localFilesystem = &filesystem{
 	},
 	CmdCombinedOutput: func(name string, arg ...string) ([]byte, error) {
 		cmd := exec.Command(name, arg...)
-		log := fmt.Sprintf("系统: %s", runtime.GOOS)
-		fmt.Println(log)
-		switch runtime.GOOS {
-		case "windows":
-			// 设置执行命令时隐藏控制台窗口
-			cmd.SysProcAttr = &syscall.SysProcAttr{
-				HideWindow: true,
-			}
-			return cmd.CombinedOutput()
-		default:
-			return cmd.CombinedOutput()
-		}
-
+		return cmd.CombinedOutput()
 	},
 }
